@@ -102,7 +102,7 @@
 			</div>
 		</div>
 
-		{% if object.uploader == user %}
+		{% if object.uploader == user or request.user.is_superuser %}
 			<a class="video-icons icon-color" href="{% url 'video-update' object.pk %}"><ion-icon name="pencil-outline"></ion-icon></a>
 			<a class="video-icons icon-color" href="{% url 'video-delete' object.pk %}"><ion-icon name="close-outline"></ion-icon></a>
 		{% endif %}
