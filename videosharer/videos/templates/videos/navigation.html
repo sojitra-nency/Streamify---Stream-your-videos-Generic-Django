@@ -20,7 +20,16 @@
         <a class="nav-link" href="{% url 'account_logout' %}">Sign Out</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'profile' user.profile.pk %}"><img src="{{ user.profile.image.url }}" width="35" height="35" class="d-inline-block rounded-circle" alt="Profile"></a>
+        {% if user.is_authenticated %}
+          {% if user.profile %}  <li class="nav-item">
+                <a class="nav-link" href="{% url 'profile' user.profile.pk %}"><img src="{{ user.profile.image.url }}" width="35" height="35" class="d-inline-block rounded-circle" alt="Profile"></a>
+              </li>
+          {% else %}
+              <li class="nav-item">
+                <a class="nav-link disabled">Admin Profile</a>
+              </li>
+          {% endif %}
+        {% endif %}
       </li>
       {% else %}
       <li class="nav-item">
