@@ -6,6 +6,7 @@ from django.views.generic import ListView
 from django.views import View
 from .models import Comment, Video, Category
 from .forms import CommentForm
+from django.db.models import Q
 
 class Index(ListView):
     model = Video
@@ -93,3 +94,19 @@ class VideoCategoryList(View):
             'category': category,
         }
         return render(request, 'videos/video_category.html', context)
+    
+
+class SearchVideo(View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('q')
+        query_list = Video.objects.filter(
+                Q(title__icontains=query) | 
+                Q(description__icontains=query) |
+                Q(category__name__icontains=query) |
+                Q(uploader__username__icontains=query)
+            ).order_by('-date_posted')
+        
+        context = {
+            'query_list': query_list,
+        }
+        return render(request, 'videos/search.html', context)

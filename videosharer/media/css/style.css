@@ -70,3 +70,24 @@
     text-decoration: none;
     transition: .3s;
 }
+
+.category-link {
+    transition: 0.3s;
+}
+
+.category-link:hover {
+    transition: 0.3s;
+    text-decoration: none;
+}
+
+.navbar-form .search-button {
+    border: 0;
+    background-color: rgba(0,0,0,0);
+    font-size: 1.5rem;
+    transition: 0.3s;
+}
+
+.navbar-form .search-button:hover {
+    color: #555;
+    transition: 0.3s;
+}
