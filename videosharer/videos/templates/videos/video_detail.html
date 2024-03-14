@@ -136,14 +136,38 @@
         </div>
     </div>
 
-    {% for comment in comments %}
-    <div class="row mt-3">
-        <div class="col-md-8 col-sm-12 border-bottom">
-            <h5>{{ comment.user }} says:</h5>
-            <p>{{ comment.comment }}</p>
+	{% if comments %}
+	<div class="row mt-3">
+        <div class="col-md-12">
+			{% for comment in comments %}
+			<div class="row mt-3">
+				<div class="col-md-8 col-sm-12 border-bottom">
+					<h5>{{ comment.user }} says:</h5>
+					<p>{{ comment.comment }}</p>
+				</div>
+			</div>
+			{% endfor %}
+			{% if has_other_pages %}  <ul class="pagination justify-content-center">
+                {% if comments.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a></li>
+                {% endif %}
+
+                {% for page_num in comments.paginator.page_range %}
+                <li class="page-item {% if page_num == comments.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% endfor %}
+
+                {% if comments.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ comments.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+            {% endif %}
         </div>
     </div>
-    {% endfor %}
+{% else %}
+    <p class="text-muted mt-3">No comments yet. Be the first to comment!</p>
+	{% endif %}
 </div>
 
 {% endblock content %}

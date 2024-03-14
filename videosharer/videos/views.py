@@ -7,11 +7,38 @@ from django.views import View
 from .models import Comment, Video, Category
 from .forms import CommentForm
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 class Index(ListView):
     model = Video
     template_name = 'videos/index.html'
-    order_by= '-date_posted'
+    context_object_name = 'video_list'
+    ordering = ['-date_posted']
+    paginate_by = 3  
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 10
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+
+        context['page_range'] = page_range
+        return context
+    
 
 class CreateVideo(LoginRequiredMixin, CreateView):
     model = Video
@@ -30,10 +57,14 @@ class DetailVideo(View):
         video = Video.objects.get(pk=pk)
         form = CommentForm()
         comments = Comment.objects.filter(video=video).order_by('-created_on')
+        paginator = Paginator(comments, 3) 
+        page_number = request.GET.get('page')
+        comments_page = paginator.get_page(page_number)
         categories = Video.objects.filter(category=video.category)[:14]
         context = {
             'object': video,
-            'comments': comments,
+            'comments': comments_page,
+            'has_other_pages': comments_page.has_other_pages(),
             'categories': categories,
             'form': form,
         }
@@ -89,8 +120,12 @@ class VideoCategoryList(View):
     def get(self, request, pk, *args, **kwargs):
         category = Category.objects.get(pk=pk)
         videos = Video.objects.filter(category=pk).order_by('-date_posted')
+        paginator = Paginator(videos, 1)  
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
         context = {
-            'videos': videos,
+            'videos': page_obj,
             'category': category,
         }
         return render(request, 'videos/video_category.html', context)

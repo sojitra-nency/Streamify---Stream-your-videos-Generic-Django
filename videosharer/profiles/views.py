@@ -3,6 +3,7 @@ from django.views import View
 from django.views.generic.edit import UpdateView
 from .models import Profile
 from videos.models import Video
+from django.core.paginator import Paginator
 
 class ProfileView(View):
 
@@ -10,9 +11,13 @@ class ProfileView(View):
         profile = get_object_or_404(Profile, pk=pk)
         videos = Video.objects.all().filter(uploader=request.user).order_by('-date_posted')
 
+        paginator = Paginator(videos, 1)  
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
             'profile': profile,
-            'videos': videos,
+            'videos': page_obj,
         }
 
         return render(request, 'profiles/profile.html', context)

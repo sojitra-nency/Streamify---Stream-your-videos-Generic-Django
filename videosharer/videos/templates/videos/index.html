@@ -3,16 +3,25 @@
 {% block content %}
     <div class="container">
         <div class="row justify-content-center">
-            {% for object in object_list %}
-            <div class="card col-md-3 col-sm-12 mr-md-2 at-5 p-3 border-0">
-                <a href="{% url "video-detail" object.pk %}"><img src="/media/{{ object.thumbnail }}" width="256" height="144" lt="..."></a>
-                <div class="card-body">
-                    <a class="link-text" href="{% url "video-detail" object.pk %}"><h5 class="text-center">{{ object.title }}</h5></a>
-                    <p class="text-muted text-center m-0">{{ object.uploader }}</p>
-                    <p class="text-muted text-center">{{ object.date_posted | date:"M d, Y"}}</p>
+            {% for video in video_list %}
+                <div class="card col-md-3 col-sm-12 mr-md-2 at-5 p-3 border-0">
+                    <a href="{% url "video-detail" video.pk %}"><img src="/media/{{ video.thumbnail }}" width="256" height="144" alt="..."></a>
+                    <div class="card-body">
+                        <a class="link-text" href="{% url "video-detail" video.pk %}"><h5 class="text-center">{{ video.title }}</h5></a>
+                        <p class="text-muted text-center m-0">{{ video.uploader }}</p>
+                        <p class="text-muted text-center">{{ video.date_posted | date:"M d, Y"}}</p>
+                    </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
+
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center">
+            {% for page_num in page_range %}
+                <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
-{% endblock content%}
+{% endblock content %}
