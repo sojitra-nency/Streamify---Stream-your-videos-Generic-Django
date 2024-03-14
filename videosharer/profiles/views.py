@@ -8,7 +8,7 @@ class ProfileView(View):
 
     def get(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(Profile, pk=pk)
-        videos = Video.objects.all().filter(uploader=pk).order_by('-date_posted')
+        videos = Video.objects.all().filter(uploader=request.user).order_by('-date_posted')
 
         context = {
             'profile': profile,
