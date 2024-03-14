@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView
 from django.views import View
-from .models import Comment, Video
+from .models import Comment, Video, Category
 from .forms import CommentForm
 
 class Index(ListView):
@@ -29,7 +29,7 @@ class DetailVideo(View):
         video = Video.objects.get(pk=pk)
         form = CommentForm()
         comments = Comment.objects.filter(video=video).order_by('-created_on')
-        categories = Video.objects.filter(category=video.category)[:15]
+        categories = Video.objects.filter(category=video.category)[:14]
         context = {
             'object': video,
             'comments': comments,
@@ -51,7 +51,7 @@ class DetailVideo(View):
             comment.save()
 
         comments = Comment.objects.filter(video=video).order_by('-created_on')
-        categories = Video.objects.filter(category=video.category)[:15]
+        categories = Video.objects.filter(category=video.category)[:14]
         context = {
             'object': video,
             'comments': comments,
@@ -83,3 +83,13 @@ class DeleteVideo(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         video = self.get_object()
         return self.request.user == video.uploader
+    
+class VideoCategoryList(View):
+    def get(self, request, pk, *args, **kwargs):
+        category = Category.objects.get(pk=pk)
+        videos = Video.objects.filter(category=pk).order_by('-date_posted')
+        context = {
+            'videos': videos,
+            'category': category,
+        }
+        return render(request, 'videos/video_category.html', context)
