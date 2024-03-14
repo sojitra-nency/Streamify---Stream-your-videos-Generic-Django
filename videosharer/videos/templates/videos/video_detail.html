@@ -37,10 +37,63 @@
                             </button>
                             </div>
                             <div class="modal-body text-center">
-                                <ion-icon class="social-share-icons twitter-social-color" name="logo-twitter" data-sharer="twitter" data-title="Checkout {{ object.title }}!" data-hashtags="" data-url="http://localhost:8000/videos/{{ object.pk }}">Share on Twitter</ion-icon>
-                                <ion-icon class="social-share-icons facebook-social-color" name="logo-facebook" data-sharer="facebook" data-title="Checkout {{ object.title }} by {{ object.uploader }}!" data-hashtags="" data-url="http://localhost:8000/videos/{{ object.pk }}">Share on Facebook</ion-icon>
-                                <ion-icon class="social-share-icons reddit-social-color" name="logo-reddit" data-sharer="reddit" data-title="Checkout {{ object.title }} by {{ object.uploader }}!" data-hashtags="" data-url="http://localhost:8000/videos/{{ object.pk }}">Share on Reddit</ion-icon>
-                                <p class="mt-3">Link: http://localhost:8000/videos/{{ object.pk }}</p>
+                                <ion-icon class="social-share-icons facebook-social-color" name="logo-facebook" 
+										data-sharer="facebook" 
+										data-title="Checkout {{ object.title }} by {{ object.uploader }}!" 
+										data-hashtags="" 
+										data-url="http://localhost:8000/videos/{{ object.pk }}"
+										onclick="shareVideo('facebook')">
+								Share on Facebook
+								</ion-icon>
+
+								<ion-icon class="social-share-icons twitter-social-color" name="logo-twitter" 
+										data-sharer="twitter" 
+										data-title="Checkout {{ object.title }}!" 
+										data-hashtags="" 
+										data-url="http://localhost:8000/videos/{{ object.pk }}"
+										onclick="shareVideo('twitter')">
+								Share on Twitter
+								</ion-icon>
+
+								<ion-icon class="social-share-icons reddit-social-color" name="logo-reddit" 
+										data-sharer="reddit" 
+										data-title="Checkout {{ object.title }} by {{ object.uploader }}!" 
+										data-hashtags="" 
+										data-url="http://localhost:8000/videos/{{ object.pk }}"
+										onclick="shareVideo('reddit')">
+								Share on Reddit
+								</ion-icon>
+
+								<ion-icon class="social-share-icons whatsapp-social-color" name="logo-whatsapp" 
+										onclick="shareVideo('whatsapp')">
+								Share on WhatsApp
+								</ion-icon>
+
+								<script>
+								function shareVideo(platform) {
+								// Construct share URL based on platform
+								var shareUrl;
+								switch (platform) {
+									case 'facebook':
+									shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('http://localhost:8000/videos/{{ object.pk }}')}&title=${encodeURIComponent('Checkout ' + '{{ object.title }}' + ' by ' + '{{ object.uploader }}' + '!')}`;
+									break;
+									case 'twitter':
+									shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent('http://localhost:8000/videos/{{ object.pk }}')}&text=${encodeURIComponent('Checkout ' + '{{ object.title }}' + '!')}`;
+									break;
+									case 'reddit':
+									shareUrl = `https://www.reddit.com/submit?url=${encodeURIComponent('http://localhost:8000/videos/{{ object.pk }}')}&title=${encodeURIComponent('Checkout ' + '{{ object.title }}' + ' by ' + '{{ object.uploader }}' + '!')}`;
+									break;
+									case 'whatsapp':
+									shareUrl = `https://wa.me/?text=${encodeURIComponent('Checkout ' + '{{ object.title }}' + ' by ' + '{{ object.uploader }}' + '! Check it out here: http://localhost:8000/videos/{{ object.pk }}')}`;
+									break;
+																}
+
+								// Open share URL in a new window
+								window.open(shareUrl, '_blank');
+								event.preventDefault(); // Prevent default click behavior
+								}
+								</script>
+								<p class="mt-3">Link: http://localhost:8000/videos/{{ object.pk }}</p>
                             </div>
                         </div>
                         </div>
