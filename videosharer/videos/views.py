@@ -141,7 +141,11 @@ class SearchVideo(View):
                 Q(uploader__username__icontains=query)
             ).order_by('-date_posted')
         
+        paginator = Paginator(query_list, 1)  # 3 videos per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
         context = {
-            'query_list': query_list,
+            'query_list': page_obj,
         }
         return render(request, 'videos/search.html', context)
