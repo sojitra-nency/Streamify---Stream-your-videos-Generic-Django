@@ -48,12 +48,14 @@ INSTALLED_APPS = [
     'allauth',# Manually: Add the allauth app to the list of installed apps
     'allauth.account',# Manually: Add the allauth.account app to the list of installed apps
     'allauth.socialaccount',# Manually: Add the allauth.socialaccount app to the list of installed apps
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+   
 ]
 
 MIDDLEWARE = [
@@ -146,7 +148,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5" # Manually: Add the crispy allowed template packs to the settings.py file
 CRISPY_TEMPLATE_PACK = 'bootstrap5' # Manually: Add the crispy template pack to the settings.py file
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Manually: Add the email backend to the settings.py file
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Manually: Add the email backend to the settings.py file
+EMAIL_HOST = 'smtp.gmail.com' # Manually: Add the email host to the settings.py file
+EMAIL_PORT = 587 # Manually: Add the email port to the settings.py file
+EMAIL_USE_TLS = True # Manually: Add the email use tls to the settings.py file
+EMAIL_HOST_USER = 'snency16@gmail.com' # Manually: Add the email host user to the settings.py file
+EMAIL_HOST_PASSWORD = 'gxqczxpftjewiyro' # Manually: Add the email host password to the settings.py file
+
 
 LOGIN_REDIRECT_URL = 'index' # Manually: Add the login redirect url to the settings.py file
 
