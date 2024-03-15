@@ -8,6 +8,7 @@ from .models import Comment, Video, Category
 from .forms import CommentForm
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.utils import timezone
 
 class Index(ListView):
     model = Video
@@ -18,7 +19,7 @@ class Index(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset
+        return queryset.filter(Q(date_posted__lte=timezone.now()) | Q(publish_date__isnull=True))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -42,10 +43,14 @@ class Index(ListView):
 
 class CreateVideo(LoginRequiredMixin, CreateView):
     model = Video
-    fields = ['title', 'description', 'video_file', 'thumbnail', 'category']
+    fields = ['title', 'description', 'video_file', 'thumbnail', 'category', 'publish_date']
     template_name = 'videos/create_video.html'
     
     def form_valid(self, form):
+        if form.instance.publish_date:
+            form.instance.date_posted = form.instance.publish_date
+        else:
+            form.instance.date_posted = timezone.now()
         form.instance.uploader = self.request.user
         return super().form_valid(form)
     
@@ -119,11 +124,16 @@ class DeleteVideo(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class VideoCategoryList(View):
     def get(self, request, pk, *args, **kwargs):
         category = Category.objects.get(pk=pk)
-        videos = Video.objects.filter(category=pk).order_by('-date_posted')
-        paginator = Paginator(videos, 1)  
+        current_date = timezone.now()
+        videos = Video.objects.filter(
+            category=pk,
+            date_posted__lte=current_date,
+            publish_date__isnull=True
+        )
+        paginator = Paginator(videos, 1)  # Paginate videos with 1 video per page
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        
+
         context = {
             'videos': page_obj,
             'category': category,
@@ -141,7 +151,7 @@ class SearchVideo(View):
                 Q(uploader__username__icontains=query)
             ).order_by('-date_posted')
         
-        paginator = Paginator(query_list, 1)  # 3 videos per page
+        paginator = Paginator(query_list, 1)  
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         
@@ -149,3 +159,4 @@ class SearchVideo(View):
             'query_list': page_obj,
         }
         return render(request, 'videos/search.html', context)
+    

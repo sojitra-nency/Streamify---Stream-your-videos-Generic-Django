@@ -11,7 +11,7 @@ class Video(models.Model):
     thumbnail = models.FileField(upload_to='uploads/thumbnails', validators=[FileExtensionValidator(allowed_extensions=['png','jpg','jpeg'])])
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    # publish_date = models.DateTimeField(blank=True, null=True)
+    publish_date = models.DateTimeField(blank=True, null=True)
 
 
 class Category(models.Model):
