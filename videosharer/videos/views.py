@@ -130,7 +130,7 @@ class VideoCategoryList(View):
             date_posted__lte=current_date,
             publish_date__isnull=True
         )
-        paginator = Paginator(videos, 1)  # Paginate videos with 1 video per page
+        paginator = Paginator(videos, 1)  
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
