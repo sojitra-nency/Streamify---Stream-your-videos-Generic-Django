@@ -9,3 +9,21 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+
+
+    '''' 
+    1. get all  users
+    2. API views
+    3. serializers
+    4. pagination 10 user
+    /all-user
+
+    curd
+    udg
+
+    views
+
+    user/<int:pk>
+
+    '''

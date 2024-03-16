@@ -5,7 +5,15 @@ from .models import Profile
 from videos.models import Video
 from django.core.paginator import Paginator
 
-class ProfileView(View):
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.contrib.auth.models import User
+from .serializers import UserSerializer, ProfileSerializer 
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.pagination import PageNumberPagination
+
+class ProfileView(View): 
 
     def get(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(Profile, pk=pk)
@@ -35,3 +43,23 @@ class UpdateProfile(UpdateView):
 
     def get_success_url(self):
         return reverse('profile', kwargs={'pk': self.object.pk})
+    
+
+
+
+# class UserPagination(PageNumberPagination):
+#     page_size = 1
+
+# class GetAllUsers(APIView):
+    
+#     def get(self, request):
+#         users = User.objects.all()
+#         paginator = UserPagination()
+#         serializer = UserSerializer(users, many=True)
+#         page = paginator.paginate_queryset(serializer.data, request) 
+#         return Response(page)
+
+# class ProfileRUDView(RetrieveUpdateDestroyAPIView):
+#     # authentication_classes = [IsAuthenticated]
+#     queryset = Profile.objects.all()
+#     serializer_class = ProfileSerializer
